@@ -1,7 +1,8 @@
+using HelpDeskWeb.Commands;
 using HelpDeskWeb.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using HelpDeskWeb.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 12;
+    options.Password.RequiredLength = 8;
 
     options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedAccount = false;
@@ -31,6 +32,16 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 var app = builder.Build();
+
+// Interceptar comandos ANTES de levantar el servidor
+using (var scope = app.Services.CreateScope())
+{
+    bool wasCommand = await CommandRunner.TryRunAsync(args, scope.ServiceProvider);
+    if (wasCommand)
+    {
+        return; // termina el programa sin levantar el sitio web
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
