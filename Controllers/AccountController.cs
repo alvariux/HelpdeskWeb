@@ -45,5 +45,44 @@ namespace HelpDeskWeb.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = new User
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                NormalizedUserName = model.Email.ToUpper(),
+                FullName = model.Name,
+                NormalizedEmail = model.Email.ToUpper()
+            };
+
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                var roleExists = await roleManager.RoleExistsAsync("Usuario");
+
+                await userManager.AddToRoleAsync(user, "Usuario");
+                await signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(String.Empty, error.Description);
+            }
+            return View(model);
+        }
+
     }
 }

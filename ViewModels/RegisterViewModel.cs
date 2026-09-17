@@ -11,7 +11,7 @@ namespace HelpDeskWeb.ViewModels
         public string Email { get; set; }
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
         [DataType(DataType.Password)]
-        [StringLength(100, ErrorMessage = "La contraseña debe tener al menos {2} caracteres.", MinimumLength = 12)]
+        [StringLength(100, ErrorMessage = "La contraseña debe tener al menos {2} caracteres.", MinimumLength = 8)]
         public string Password { get; set; }
         [Required(ErrorMessage = "La confirmación de la contraseña es obligatoria.")]
         [DataType(DataType.Password)]
