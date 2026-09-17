@@ -84,5 +84,75 @@ namespace HelpDeskWeb.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult VerifyEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(String.Empty, "No se encontró un usuario con ese correo electrónico.");
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("ChangePassword", "Account",new { username = model.Email });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword(string username)
+        {
+            if(string.IsNullOrEmpty(username))
+            {
+                return RedirectToAction("VerifyEmail","Account");
+            }
+            var model = new ChangePasswordViewModel { Email = username };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(String.Empty, "No se encontró un usuario con ese correo electrónico.");
+                return View(model);
+            }
+            var result = await userManager.ChangePasswordAsync(user, model.NewPassword, model.ConfirmNewPassword);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(String.Empty, error.Description);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
