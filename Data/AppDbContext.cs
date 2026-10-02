@@ -6,6 +6,7 @@ namespace HelpDeskWeb.Data
 {
     public class AppDbContext: IdentityDbContext<User>
     {
+        public DbSet<TicketStatus> TicketStatus { get; set; }
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }
@@ -23,6 +24,18 @@ namespace HelpDeskWeb.Data
             builder.Entity<User>()
                 .Property(u => u.UpdatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");  // SQL Server
+
+            builder.Entity<TicketStatus>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            builder.Entity<TicketStatus>()
+                .Property(u => u.UpdatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            builder.Entity<TicketStatus>()
+                .HasIndex(ts => ts.Name)
+                .IsUnique();
         }
     }
 }
