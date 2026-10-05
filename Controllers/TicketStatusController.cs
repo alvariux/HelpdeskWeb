@@ -19,7 +19,7 @@ namespace HelpDeskWeb.Controllers
             List<TicketStatus> ticketStatusList = _appDbContext.TicketStatus.ToList();
             return View(ticketStatusList);
         }
-
+        
         [HttpGet]
         public IActionResult Create()
         {
