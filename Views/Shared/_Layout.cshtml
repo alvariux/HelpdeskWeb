@@ -51,19 +51,13 @@
                         }
                         @if (User.IsInRole("Usuario"))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="usuarioMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Usuario</a>
-                                <ul class="dropdown-menu" aria-labelledby="usuarioMenuDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="User">Panel Usuario</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Ticket" asp-action="MyTickets">Ver Tickets</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Ticket" asp-action="CreateUserTicket">Nuevo Ticket</a>
-                                    </li>
-                                </ul>
+                            <li class="nav-item dropdown">                                
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User">Panel Usuario</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Ticket" asp-action="MyTickets">Ver Tickets</a>
+                                </li>                                                                    
                             </li>
                         }
                         <partial name="_LoginPartial" />
