@@ -1,0 +1,38 @@
+@model HelpDeskWeb.Models.Ticket
+
+<h1>Detalle de Ticket</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Title (@Model.TicketNumber)</h5>
+        <p class="card-text">@Model.Description</p>
+        <dl class="row">
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">@Model.Status?.Name</dd>
+
+            <dt class="col-sm-3">Prioridad</dt>
+            <dd class="col-sm-9">@Model.Priority?.Name</dd>
+
+            <dt class="col-sm-3">Asignado a</dt>
+            <dd class="col-sm-9">@Model.AssignedTo?.FullName</dd>
+
+            <dt class="col-sm-3">Creado por</dt>
+            <dd class="col-sm-9">@Model.CreatedBy?.FullName</dd>
+
+            <dt class="col-sm-3">Creado</dt>
+            <dd class="col-sm-9">@Model.CreatedAt</dd>
+
+            <dt class="col-sm-3">Due Date</dt>
+            <dd class="col-sm-9">@Model.DueDate</dd>
+
+            <dt class="col-sm-3">Resuelto por</dt>
+            <dd class="col-sm-9">@Model.ResolvedBy?.FullName</dd>
+
+            <dt class="col-sm-3">Cerrado por</dt>
+            <dd class="col-sm-9">@Model.ClosedBy?.FullName</dd>
+        </dl>
+
+        <a asp-controller="Ticket" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-controller="Ticket" asp-action="Index" class="btn btn-secondary">Regresar</a>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+@model HelpDeskWeb.Models.Ticket
+
+<h1>Crear Ticket</h1>
+
+<form asp-controller="Ticket" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StatusId" class="form-label">Status</label>
+        <select asp-for="StatusId" class="form-select" asp-items='@(new SelectList((List<HelpDeskWeb.Models.TicketStatus>)ViewData["Statuses"], "Id", "Name"))'></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PriorityId" class="form-label">Priority</label>
+        <select asp-for="PriorityId" class="form-select" asp-items='@(new SelectList((List<HelpDeskWeb.Models.TicketPriority>)ViewData["Priorities"], "Id", "Name"))'></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AssignedToId" class="form-label">Asignar a</label>
+        <select asp-for="AssignedToId" class="form-select" asp-items='@(ViewData["Users"] as SelectList)'>
+            <option value="">-- Ninguno --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DueDate" class="form-label"></label>
+        <input asp-for="DueDate" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" value="Crear" class="btn btn-primary" />
+        <a asp-controller="Ticket" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -98,26 +98,32 @@ namespace HelpDeskWeb.Controllers
             {
                 return View(model);
             }
+
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError(String.Empty, "No se encontró un usuario con ese correo electrónico.");
                 return View(model);
             }
-            else
-            {
-                return RedirectToAction("ChangePassword", "Account",new { username = model.Email });
-            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            return RedirectToAction("ChangePassword", "Account", new { email = model.Email, token });
         }
 
         [HttpGet]
-        public IActionResult ChangePassword(string username)
+        public IActionResult ChangePassword(string email, string token)
         {
-            if(string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
             {
-                return RedirectToAction("VerifyEmail","Account");
+                return RedirectToAction("VerifyEmail", "Account");
             }
-            var model = new ChangePasswordViewModel { Email = username };
+
+            var model = new ChangePasswordViewModel
+            {
+                Email = email,
+                Token = token
+            };
+
             return View(model);
         }
 
@@ -129,21 +135,25 @@ namespace HelpDeskWeb.Controllers
             {
                 return View(model);
             }
+
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError(String.Empty, "No se encontró un usuario con ese correo electrónico.");
                 return View(model);
             }
-            var result = await userManager.ChangePasswordAsync(user, model.NewPassword, model.ConfirmNewPassword);
+
+            var result = await userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
             if (result.Succeeded)
             {
                 return RedirectToAction("Login", "Account");
             }
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(String.Empty, error.Description);
             }
+
             return View(model);
         }
 
