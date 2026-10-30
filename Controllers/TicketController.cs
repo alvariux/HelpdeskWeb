@@ -69,7 +69,7 @@ namespace HelpDeskWeb.Controllers
                 {
                     Title = model.Title,
                     Description = model.Description,
-                    TicketNumber = $"T-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 4)}",
+                    TicketNumber = $"T-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString().Substring(0, 4)}",
                     CreatedById = userId,
                     CreatedAt = DateTime.Now
                 };
@@ -96,7 +96,7 @@ namespace HelpDeskWeb.Controllers
             return View(list);
         }
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador,Usuario")]
         [HttpGet]
         public IActionResult Details(int id)
         {
